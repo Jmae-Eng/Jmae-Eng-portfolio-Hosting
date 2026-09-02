@@ -1,0 +1,76 @@
+  <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Jive Montrial Portfolio</title>
+    <style>
+      :root {
+        --font-ui: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      html, body {
+        font-family: var(--font-ui);
+      }
+    </style>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode"></button>
+
+    <nav id="scroll-map" class="scroll-map" aria-label="Page sections">
+      <span class="scroll-map-track" aria-hidden="true"><span id="scroll-progress" class="scroll-progress"></span></span>
+      <a href="#profile" class="map-point is-active" data-section="profile" aria-label="Go to profile"><span>Profile</span></a>
+      <a href="#readme" class="map-point" data-section="readme" aria-label="Go to README"><span>README</span></a>
+      <a href="#gallery" class="map-point" data-section="gallery" aria-label="Go to gallery"><span>Gallery</span></a>
+      <a href="#work-detail" class="map-point work-map-point" data-section="work-detail" aria-label="Go to selected work" hidden><span>Work</span></a>
+    </nav>
+
+    <main id="profile" class="profile-card">
+      <div class="avatar-wrap">
+        <img src="https://github.com/Jmae-Eng.png" alt="Jive Montrial" class="avatar" />
+      </div>
+
+      <h1>Jive Montrial</h1>
+      <p class="role">Student</p>
+
+      <div id="social-row" class="social-row" aria-label="Social links"></div>
+    </main>
+
+    <section id="readme" class="readme-section" aria-labelledby="readme-title">
+      <div class="readme-header">
+        <p class="readme-label">GitHub profile</p>
+        <a href="https://github.com/Jmae-Eng/Jmae-Eng" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+      </div>
+      <article id="readme-content" class="readme-content">
+        <h2 id="readme-title">Loading README...</h2>
+      </article>
+    </section>
+
+    <section id="gallery" class="gallery-section" aria-labelledby="gallery-title">
+      <div class="gallery-header">
+        <p class="readme-label">School projects</p>
+        <h2 id="gallery-title">My School Works</h2>
+      </div>
+      <button id="create-work-button" class="create-work-button" type="button">Create a work</button>
+      <form id="create-work-form" class="work-editor create-work-form" hidden></form>
+      <div id="category-tabs" class="category-tabs" role="tablist" aria-label="Project categories"></div>
+      <div id="gallery-grid" class="gallery-grid"></div>
+    </section>
+
+    <section id="work-detail" class="work-detail" aria-live="polite" hidden></section>
+
+    <footer id="footer" class="site-footer">
+      &copy; 2026 Jmae-Eng | All Rights Reserve
+    </footer>
+
+    <dialog id="image-modal" class="image-modal">
+      <button id="close-modal" class="close-modal" type="button" aria-label="Close image">&times;</button>
+      <img id="modal-image" src="" alt="" />
+      <p id="modal-caption"></p>
+    </dialog>
+
+    <script src="script.js?v=local-editor-final"></script>
+  </body> 
+</html>

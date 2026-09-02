@@ -1,0 +1,679 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cirno Decollege</title>
+  <style>
+    :root {
+      --desktop-panel-width: min(1260px, calc(100vw - 120px));
+      --hero-height: 560px;
+    }
+
+    .project-editor-toggle {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 2;
+      padding: 9px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 7px;
+      background: rgba(15, 17, 21, 0.7);
+      color: #fff;
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .project-editor-panel {
+      display: none;
+      margin: 0 18px 18px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      color: #edf2f7;
+    }
+
+    .project-editor-panel.is-open {
+      display: block;
+    }
+
+    .project-editor-panel form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .project-editor-panel label {
+      display: grid;
+      gap: 6px;
+      font-size: 0.76rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #d9e0e7;
+    }
+
+    .project-editor-panel input,
+    .project-editor-panel textarea,
+    .project-editor-panel select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      background: rgba(12, 15, 19, 0.7);
+      color: #f5f7fa;
+      font: inherit;
+    }
+
+    .project-editor-panel textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .project-editor-panel .form-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .project-editor-panel button {
+      padding: 10px 14px;
+      border: 0;
+      border-radius: 8px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .project-editor-panel .save-btn {
+      background: #f4f6f7;
+      color: #171b20;
+    }
+
+    .project-editor-panel .cancel-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: #edf2f7;
+    }
+
+    .standalone-work {
+      width: var(--desktop-panel-width);
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .standalone-hero {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 350px;
+      background: #121821;
+    }
+
+    .standalone-hero img {
+      display: block;
+      width: 100%;
+      max-width: 1000px;
+      height: auto;
+      max-height: min(78vh, 900px);
+      margin: 0 auto;
+      object-fit: contain;
+      transition: all 0.25s ease;
+    }
+
+    .project-banner-link {
+      display: block;
+      width: 100%;
+      background: #121821;
+      text-align: center;
+    }
+
+    .project-banner-link.is-broken,
+    .project-extra-item.is-broken {
+      display: none;
+    }
+
+    .standalone-hero-copy {
+      padding: 20px 28px 0;
+    }
+
+    .standalone-hero-copy h1 {
+      margin-top: 10px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .project-extra-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      width: min(980px, 100%);
+      margin: 12px auto 0;
+      padding: 0 28px 24px;
+    }
+
+    .project-extra-item {
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .project-extra-item img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 760px;
+      object-fit: contain;
+      background: #121821;
+    }
+
+    .project-extra-item a {
+      display: block;
+    }
+
+    .standalone-article {
+      padding: 0 28px 32px;
+    }
+
+    .standalone-meta {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .standalone-story {
+      grid-template-columns: 220px minmax(0, 1fr);
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 1024px) {
+      .standalone-work {
+        padding-bottom: 18px;
+      }
+    }
+  </style>
+  <style>
+    :root {
+      --desktop-panel-width: min(1260px, calc(100vw - 120px));
+      --hero-height: 560px;
+    }
+
+    .project-editor-toggle {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 2;
+      padding: 9px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 7px;
+      background: rgba(15, 17, 21, 0.7);
+      color: #fff;
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .project-editor-panel {
+      display: none;
+      margin: 0 18px 18px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      color: #edf2f7;
+    }
+
+    .project-editor-panel.is-open {
+      display: block;
+    }
+
+    .project-editor-panel form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .project-editor-panel label {
+      display: grid;
+      gap: 6px;
+      font-size: 0.76rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #d9e0e7;
+    }
+
+    .project-editor-panel input,
+    .project-editor-panel textarea,
+    .project-editor-panel select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      background: rgba(12, 15, 19, 0.7);
+      color: #f5f7fa;
+      font: inherit;
+    }
+
+    .project-editor-panel textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .project-editor-panel .form-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .project-editor-panel button {
+      padding: 10px 14px;
+      border: 0;
+      border-radius: 8px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .project-editor-panel .save-btn {
+      background: #f4f6f7;
+      color: #171b20;
+    }
+
+    .project-editor-panel .cancel-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: #edf2f7;
+    }
+
+    .standalone-work {
+      width: var(--desktop-panel-width);
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .standalone-hero {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 350px;
+      background: #121821;
+    }
+
+    .standalone-hero img {
+      display: block;
+      width: 100%;
+      max-width: 1000px;
+      height: auto;
+      max-height: min(78vh, 900px);
+      margin: 0 auto;
+      object-fit: contain;
+      transition: all 0.25s ease;
+    }
+
+    .project-banner-link {
+      display: block;
+      width: 100%;
+      background: #121821;
+      text-align: center;
+    }
+
+    .project-banner-link.is-broken,
+    .project-extra-item.is-broken {
+      display: none;
+    }
+
+    .standalone-hero-copy {
+      padding: 20px 28px 0;
+    }
+
+    .standalone-hero-copy h1 {
+      margin-top: 10px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .project-extra-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      width: min(980px, 100%);
+      margin: 12px auto 0;
+      padding: 0 28px 24px;
+    }
+
+    .project-extra-item {
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .project-extra-item img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 760px;
+      object-fit: contain;
+      background: #121821;
+    }
+
+    .project-extra-item a {
+      display: block;
+    }
+
+    .standalone-article {
+      padding: 0 28px 32px;
+    }
+
+    .standalone-meta {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .standalone-story {
+      grid-template-columns: 220px minmax(0, 1fr);
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 1024px) {
+      .standalone-work {
+        padding-bottom: 18px;
+      }
+    }
+  </style>
+</head>
+<body class="work-page">
+  <main class="standalone-work" id="standalone-work" data-extra-image-placement="middle">
+    <section class="standalone-hero" id="standalone-hero">
+      <a class="standalone-back" href="../../../../index.html#gallery">← Back to my works</a>
+      <button class="project-editor-toggle" type="button" id="toggle-project-editor">Edit project</button>
+      <div class="project-banner-link" id="project-banner-link">
+        <img id="project-banner" src="https://github.com/Jmae-Eng/Jmae-Eng-portfolio-Hosting/blob/main/Images%20and%20Videos/Random%20Projects/CIrno%20decollege/F1liuLgaYAcBrdk_Banner.jpg?raw=true" alt="Cirno Decollege artwork">
+      </div>
+      <div class="standalone-hero-copy">
+        <p class="readme-label">Selected work / Random project</p>
+        <h1 id="project-title">Cirno Decollege</h1>
+        <p id="project-summary">A small creative experiment blending character styling and visual mood into a personal concept piece.</p>
+      </div>
+    </section>
+
+    <section class="standalone-article">
+      <div class="standalone-meta">
+        <span><strong>Year</strong>2023</span>
+        <span><strong>Focus</strong>Random project</span>
+      </div>
+
+      <div class="standalone-story">
+        <aside class="standalone-contents">
+          <strong>Contents</strong>
+          <a href="#role">My role</a>
+          <a href="#process">How I made it</a>
+        </aside>
+
+        <article>
+          <h2 id="role">My role</h2>
+          <p id="project-role">I worked on the concept, composition, and image direction, turning a loose idea into a more deliberate visual statement.</p>
+
+          <section class="project-extra-gallery" id="project-extra-gallery" aria-label="Project gallery" aria-live="polite"><figure class="project-extra-item"><a href="https://raw.githubusercontent.com/Jmae-Eng/Jmae-Eng-portfolio-Hosting/refs/heads/main/Images%20and%20Videos/Random%20Projects/CIrno%20decollege/F1liuLgaYAcBrdk.jfif" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/Jmae-Eng/Jmae-Eng-portfolio-Hosting/refs/heads/main/Images%20and%20Videos/Random%20Projects/CIrno%20decollege/F1liuLgaYAcBrdk.jfif" alt="Additional project image" loading="lazy" decoding="async"></a></figure></section><h2 id="process">How I made it</h2>
+          <p id="project-process">I started from a simple idea and built the design around personality, color, and silhouette. The goal was to keep the piece playful and recognizable while still feeling like an original personal experiment.</p>
+        </article>
+      </div>
+    </section>
+
+    
+
+    <section class="project-editor-panel" id="project-editor-panel">
+      <form id="project-editor-form">
+        <label>
+          Project title
+          <input name="title" id="form-title" value="Cirno Decollege">
+        </label>
+        <label>
+          Summary
+          <textarea name="summary" id="form-summary">A small creative experiment blending character styling and visual mood into a personal concept piece.</textarea>
+        </label>
+        <label>
+          Banner image URL
+          <input name="bannerImage" id="form-banner" value="https://github.com/Jmae-Eng/Jmae-Eng-portfolio-Hosting/blob/main/Images%20and%20Videos/Random%20Projects/CIrno%20decollege/F1liuLgaYAcBrdk_Banner.jpg?raw=true">
+        </label>
+        <label>
+          Additional images (one URL per line)
+          <textarea name="extraImages" id="form-extra-images">https://raw.githubusercontent.com/Jmae-Eng/Jmae-Eng-portfolio-Hosting/refs/heads/main/Images%20and%20Videos/Random%20Projects/CIrno%20decollege/F1liuLgaYAcBrdk.jfif</textarea>
+        </label>
+        <label>
+          Additional images placement
+          <select name="extraImagePlacement" id="form-extra-image-placement">
+          <option value="top" >Top</option>
+          <option value="middle" selected>Middle</option>
+          <option value="bottom" >Bottom</option>
+          
+            <option value="top">Top</option>
+            <option value="middle">Middle</option>
+            <option value="bottom">Bottom</option>
+          </select>
+        </label>
+        <label>
+          My role
+          <textarea name="role" id="form-role">I worked on the concept, composition, and image direction, turning a loose idea into a more deliberate visual statement.</textarea>
+        </label>
+        <label>
+          How I made it
+          <textarea name="process" id="form-process">I started from a simple idea and built the design around personality, color, and silhouette. The goal was to keep the piece playful and recognizable while still feeling like an original personal experiment.</textarea>
+        </label>
+        <div class="form-actions">
+          <button class="save-btn" type="submit">Save changes</button>
+          <button class="save-btn" type="button" id="download-project-html">Download project HTML</button>
+          <button class="cancel-btn" type="button" id="cancel-project-editor">Cancel</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const projectStorageKey = 'cirno-decollege-project';
+    const defaultProject = {
+      title: 'Cirno Decollege',
+      summary: 'A small creative experiment blending character styling and visual mood into a personal concept piece.',
+      role: 'I worked on the concept, composition, and image direction, turning a loose idea into a more deliberate visual statement.',
+      process: 'I started from a simple idea and built the design around personality, color, and silhouette. The goal was to keep the piece playful and recognizable while still feeling like an original personal experiment.',
+      bannerImage: 'https://drive.google.com/uc?export=view&id=1bWvFPmL95dPPxhdRG0uXNU6WXO8PmPot',
+      extraImages: [],
+      extraImagePlacement: 'middle'
+    };
+
+    const editorToggle = document.getElementById('toggle-project-editor');
+    const editorPanel = document.getElementById('project-editor-panel');
+    const cancelButton = document.getElementById('cancel-project-editor');
+    const downloadProjectHtmlButton = document.getElementById('download-project-html');
+    const form = document.getElementById('project-editor-form');
+    const projectPage = document.getElementById('standalone-work');
+    const gallery = document.getElementById('project-extra-gallery');
+    const articleSection = document.querySelector('.standalone-article');
+    const storySection = document.querySelector('.standalone-story');
+    const processHeading = document.getElementById('process');
+
+    function normalizeExtraImages(value) {
+      return String(value || '')
+        .split(/\n|,/)
+        .map((item) => item.trim())
+        .filter(Boolean)
+        .filter((item) => /^https?:\/\//i.test(item) || /^\//.test(item));
+    }
+
+    function normalizeImageUrl(value) {
+      const imageUrl = String(value || '').trim();
+      const driveMatch = imageUrl.match(/drive\.google\.com\/file\/d\/([^/]+)/i);
+      return driveMatch ? `https://drive.google.com/uc?export=view&id=${driveMatch[1]}` : imageUrl;
+    }
+
+    function renderExtraImages(extraImages) {
+      gallery.innerHTML = '';
+
+      const validImages = normalizeExtraImages(extraImages);
+      validImages.forEach((imageUrl) => {
+        const item = document.createElement('figure');
+        item.className = 'project-extra-item';
+
+        const img = document.createElement('img');
+        const link = document.createElement('a');
+        link.href = normalizeImageUrl(imageUrl);
+        link.target = '_blank';
+        link.rel = 'noreferrer';
+        img.src = normalizeImageUrl(imageUrl);
+        img.alt = 'Additional project image';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.addEventListener('error', () => item.classList.add('is-broken'));
+
+        link.appendChild(img);
+        item.appendChild(link);
+        gallery.appendChild(item);
+      });
+
+      if (!validImages.length) {
+        gallery.innerHTML = '<p class="muted-copy">No additional images yet.</p>';
+      }
+    }
+
+    function placeExtraGallery(placement) {
+      if (placement === 'middle') {
+        processHeading.parentNode.insertBefore(gallery, processHeading);
+      } else if (placement === 'bottom') {
+        articleSection.parentNode.insertBefore(gallery, articleSection.nextSibling);
+      } else {
+        articleSection.parentNode.insertBefore(gallery, articleSection);
+      }
+    }
+
+    function buildProjectHtml(project) {
+      const sourceHtml = document.documentElement.outerHTML;
+      const projectStyles = document.querySelector('style').outerHTML;
+      const dynamicHtml = sourceHtml
+        .replace(/<link rel="stylesheet" href="\.\.\/\.\.\/\.\.\/\.\.\/style\.css">/i, projectStyles)
+        .replace(/<title>.*?<\/title>/i, `<title>${project.title}</title>`)
+        .replace(/id="project-title">.*?<\/h1>/i, `id="project-title">${project.title}</h1>`)
+        .replace(/id="project-summary">.*?<\/p>/i, `id="project-summary">${project.summary}</p>`)
+        .replace(/id="project-role">.*?<\/p>/i, `id="project-role">${project.role}</p>`)
+        .replace(/id="project-process">.*?<\/p>/i, `id="project-process">${project.process}</p>`)
+        .replace(/id="project-banner"[^>]*src="[^"]*"/i, `id="project-banner" src="${normalizeImageUrl(project.bannerImage)}"`)
+        .replace(/data-extra-image-placement="[^"]*"/i, `data-extra-image-placement="${['top', 'middle', 'bottom'].includes(project.extraImagePlacement) ? project.extraImagePlacement : 'middle'}"`)
+        .replace(/id="form-title" value="[^"]*"/i, `id="form-title" value="${project.title}"`)
+        .replace(/id="form-summary">.*?<\/textarea>/is, `id="form-summary">${project.summary}</textarea>`)
+        .replace(/id="form-role">.*?<\/textarea>/is, `id="form-role">${project.role}</textarea>`)
+        .replace(/id="form-process">.*?<\/textarea>/is, `id="form-process">${project.process}</textarea>`)
+        .replace(/id="form-banner" value="[^"]*"/i, `id="form-banner" value="${project.bannerImage}"`)
+        .replace(/id="form-extra-image-placement"[^>]*>/is, `id="form-extra-image-placement">
+          <option value="top" ${project.extraImagePlacement === 'top' ? 'selected' : ''}>Top</option>
+          <option value="middle" ${project.extraImagePlacement === 'middle' ? 'selected' : ''}>Middle</option>
+          <option value="bottom" ${project.extraImagePlacement === 'bottom' ? 'selected' : ''}>Bottom</option>
+          `)
+        .replace(/id="form-extra-images"[^>]*>.*?<\/textarea>/is, `id="form-extra-images">${project.extraImages.join('\n')}</textarea>`);
+
+      return dynamicHtml;
+    }
+
+    function persistProject(project) {
+      localStorage.setItem(projectStorageKey, JSON.stringify(project));
+      applyProjectData(project);
+      editorPanel.classList.remove('is-open');
+    }
+
+    function triggerProjectDownload(project) {
+      const html = buildProjectHtml(project);
+      const downloadName = `${(project.title || 'project').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'project'}.html`;
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = downloadName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function applyProjectData(project) {
+      const placement = ['top', 'middle', 'bottom'].includes(project.extraImagePlacement) ? project.extraImagePlacement : 'top';
+      const safeExtraImages = Array.isArray(project.extraImages) ? project.extraImages : normalizeExtraImages(project.extraImages || '');
+      document.title = project.title;
+      document.getElementById('project-title').textContent = project.title;
+      document.getElementById('project-summary').textContent = project.summary;
+      document.getElementById('project-role').textContent = project.role;
+      document.getElementById('project-process').textContent = project.process;
+      const bannerUrl = normalizeImageUrl(project.bannerImage);
+      const bannerContainer = document.getElementById('project-banner-link');
+      const bannerImage = document.getElementById('project-banner');
+      bannerImage.src = bannerUrl;
+      bannerContainer.classList.remove('is-broken');
+      bannerImage.onerror = () => bannerContainer.classList.add('is-broken');
+      document.getElementById('project-banner').alt = project.title + ' artwork';
+      projectPage.setAttribute('data-extra-image-placement', placement);
+      renderExtraImages(safeExtraImages);
+      placeExtraGallery(placement);
+      document.getElementById('form-title').value = project.title;
+      document.getElementById('form-summary').value = project.summary;
+      document.getElementById('form-role').value = project.role;
+      document.getElementById('form-process').value = project.process;
+      document.getElementById('form-banner').value = project.bannerImage;
+      document.getElementById('form-extra-images').value = safeExtraImages.join('\n');
+      document.getElementById('form-extra-image-placement').value = placement;
+    }
+
+    const savedProject = JSON.parse(localStorage.getItem(projectStorageKey) || 'null');
+    const savedPlacement = savedProject && (savedProject.extraImagePlacement || savedProject.imagePlacement);
+    const currentProject = {
+      ...defaultProject,
+      ...(savedProject || {}),
+      extraImagePlacement: ['top', 'middle', 'bottom'].includes(savedPlacement) ? savedPlacement : defaultProject.extraImagePlacement
+    };
+    applyProjectData(currentProject);
+
+    editorToggle.addEventListener('click', () => {
+      editorPanel.classList.toggle('is-open');
+    });
+
+    form.extraImagePlacement.addEventListener('change', () => {
+      const placement = ['top', 'middle', 'bottom'].includes(form.extraImagePlacement.value) ? form.extraImagePlacement.value : 'middle';
+      projectPage.setAttribute('data-extra-image-placement', placement);
+      placeExtraGallery(placement);
+    });
+
+    cancelButton.addEventListener('click', () => {
+      editorPanel.classList.remove('is-open');
+    });
+
+    downloadProjectHtmlButton.addEventListener('click', () => {
+      const nextProject = {
+        title: form.title.value.trim() || defaultProject.title,
+        summary: form.summary.value.trim() || defaultProject.summary,
+        role: form.role.value.trim() || defaultProject.role,
+        process: form.process.value.trim() || defaultProject.process,
+        bannerImage: form.bannerImage.value.trim() || defaultProject.bannerImage,
+        extraImages: normalizeExtraImages(form.extraImages.value),
+        extraImagePlacement: ['top', 'middle', 'bottom'].includes(form.extraImagePlacement.value) ? form.extraImagePlacement.value : 'top'
+      };
+
+      persistProject(nextProject);
+      triggerProjectDownload(nextProject);
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const nextProject = {
+        title: form.title.value.trim() || defaultProject.title,
+        summary: form.summary.value.trim() || defaultProject.summary,
+        role: form.role.value.trim() || defaultProject.role,
+        process: form.process.value.trim() || defaultProject.process,
+        bannerImage: form.bannerImage.value.trim() || defaultProject.bannerImage,
+        extraImages: normalizeExtraImages(form.extraImages.value),
+        extraImagePlacement: ['top', 'middle', 'bottom'].includes(form.extraImagePlacement.value) ? form.extraImagePlacement.value : 'top'
+      };
+
+      persistProject(nextProject);
+    });
+  </script>
+
+</body></html>

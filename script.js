@@ -440,7 +440,7 @@ function githubRawUrl(path) {
 }
 
 function githubPageUrl(path) {
-  return `https://htmlpreview.github.io/?${githubRawUrl(path)}`;
+  return `https://jmae-eng.github.io/${githubRepository}/${path.split("/").map(encodeURIComponent).join("/")}`;
 }
 
 function projectTitleFromPath(path) {

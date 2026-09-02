@@ -149,6 +149,10 @@ const imageModal = document.querySelector("#image-modal");
 const modalImage = document.querySelector("#modal-image");
 const modalCaption = document.querySelector("#modal-caption");
 const closeModal = document.querySelector("#close-modal");
+const githubRepository = "Jmae-Eng/Jmae-Eng-portfolio-Hosting";
+const githubTreeUrl = `https://api.github.com/repos/${githubRepository}/git/trees/main?recursive=1`;
+const githubProjects = [];
+let githubProjectsLoaded = false;
 function renderWorkDetail(work) {
   const bannerImage = work.bannerImage || work.image;
 
@@ -425,9 +429,65 @@ const placeholders = {
   random: "Random projects will be added here soon.",
 };
 
+const githubCategoryFolders = {
+  coding: "Blogs/Coding Projects/",
+  electronic: "Blogs/Electronics Projects/",
+  random: "Blogs/Random Projects/",
+};
+
+function githubRawUrl(path) {
+  return `https://raw.githubusercontent.com/${githubRepository}/main/${path.split("/").map(encodeURIComponent).join("/")}`;
+}
+
+function githubPageUrl(path) {
+  return `https://htmlpreview.github.io/?${githubRawUrl(path)}`;
+}
+
+function projectTitleFromPath(path) {
+  const filename = path.split("/").pop().replace(/\.html?$/i, "");
+  return filename.replace(/[-_]+/g, " ").replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
+async function loadGithubProjects() {
+  try {
+    const response = await fetch(githubTreeUrl, { headers: { Accept: "application/vnd.github+json" } });
+    if (!response.ok) throw new Error(`GitHub tree request failed: ${response.status}`);
+    const tree = await response.json();
+    const htmlFiles = (tree.tree || []).filter((entry) => entry.type === "blob" && /\.html?$/i.test(entry.path));
+    const projects = htmlFiles.map((entry) => {
+      const category = Object.entries(githubCategoryFolders).find(([, folder]) => entry.path.startsWith(folder))?.[0];
+      if (!category) return null;
+      const title = projectTitleFromPath(entry.path);
+      return {
+        id: `github-${entry.path}`,
+        htmlFile: githubPageUrl(entry.path),
+        projectCategory: category,
+        title,
+        shortTitle: title,
+        date: "",
+        category: category === "electronic" ? "Electronic project" : `${category[0].toUpperCase()}${category.slice(1)} project`,
+        summary: "Open the project page for the full write-up.",
+        role: "",
+        process: "",
+        image: "",
+        source: "github",
+      };
+    }).filter(Boolean);
+
+    githubProjects.push(...projects);
+  } catch {
+    // Empty categories use the existing Coming soon state when GitHub is unavailable.
+  } finally {
+    githubProjectsLoaded = true;
+    renderGallery(document.querySelector(".category-tab[aria-selected='true']")?.dataset.category || "coding");
+  }
+}
+
 function renderGallery(categoryId) {
   galleryGrid.innerHTML = "";
-  const works = galleryItems.filter((work) => work.projectCategory === categoryId);
+  const localWorks = galleryItems.filter((work) => work.projectCategory === categoryId && work.source === "created");
+  const remoteWorks = githubProjects.filter((work) => work.projectCategory === categoryId);
+  const works = githubProjectsLoaded ? [...remoteWorks, ...localWorks] : [];
 
   if (!works.length) {
     galleryGrid.innerHTML = `<div class="category-placeholder"><span>Coming soon</span><strong>${placeholders[categoryId]}</strong><p>This space is ready for a new project.</p></div>`;
@@ -464,6 +524,7 @@ projectCategories.forEach((category, index) => {
 });
 
 renderGallery("coding");
+loadGithubProjects();
 
 closeModal.addEventListener("click", () => imageModal.close());
 imageModal.addEventListener("click", (event) => {
